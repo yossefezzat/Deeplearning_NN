@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+Sign-Language-Digits-Dataset-master
 # C extensions
 *.so
 
