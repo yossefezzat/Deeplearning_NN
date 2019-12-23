@@ -20,12 +20,12 @@ def extract_train_valid_test():
         Y_train.append(train_data[i][image_size:])
     Y_train = [list(map(int, i)) for i in Y_train]
     for i in range(len(validation_data)):
-        X_validation.append(train_data[i][:image_size])
-        Y_validation.append(train_data[i][image_size:])
-    Y_validation = [list(map(int, i)) for i in Y_validation]    
+        X_validation.append(validation_data[i][:image_size])
+        Y_validation.append(validation_data[i][image_size:])
+    Y_validation = [list(map(int, i)) for i in Y_validation]
     for i in range(len(test_data)):
-        X_test.append(train_data[i][:image_size])
-        Y_test.append(train_data[i][image_size:])
+        X_test.append(test_data[i][:image_size])
+        Y_test.append(test_data[i][image_size:])
     Y_test = [list(map(int, i)) for i in Y_test]    
 
     return X_train, Y_train , X_validation , Y_validation , X_test , Y_test
