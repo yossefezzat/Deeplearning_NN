@@ -50,11 +50,13 @@ def build_model(n_layers=[], activ_func_layers=[]):
 def k_fold_arch_CNN(n_layers, activ_func_layers, k_fold=5):
     history_acc = []
     model = build_model(n_layers, activ_func_layers)
+    keras.utils.plot_model(model, to_file="model_plot.jpg", show_shapes=True, show_layer_names=True)
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
-        history = model.fit(np.array(X_train), np.array(Y_train) ,epochs=10 , batch_size=64)        
-        test_loss, test_acc = model.evaluate(np.array(X_train) , np.array(Y_train))        
+        history = model.fit(np.array(X_train), np.array(Y_train) ,epochs=10  , validation_data = (np.array(X_validation) , np.array(Y_validation)) ,   batch_size=64)        
+        test_loss, test_acc = model.evaluate(np.array(X_test) , np.array(Y_test))        
         Y_pred = model.predict(np.array(X_test))
+        print(np.argmax(Y_pred[0]) , " hello  ", np.argmax(Y_test[0]))
         Y_pred = [int(np.argmax(i)) for i in Y_pred]
         history_acc.append(history.history['accuracy'][-1]) #last epoch acc
     return history_acc

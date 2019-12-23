@@ -50,8 +50,8 @@ def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=5):
     model = build_model(n_layers, activ_func_layers)
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
-        history = model.fit(X_train, Y_train ,epochs=64 , batch_size=64)        
-        test_loss, test_acc = model.evaluate(X_train , Y_train)        
+        history = model.fit(X_train , Y_train ,epochs = 20 , batch_size=64)
+        test_loss, test_acc = model.evaluate(X_test , Y_test)        
         Y_pred = model.predict(X_test)
         Y_pred = [int(np.argmax(i)) for i in Y_pred]
         history_acc.append(history.history['accuracy'][-1]) #last epoch acc
@@ -61,10 +61,10 @@ def experiment(n_layers, activ_func_layers, k_fold=5):
     history_acc = k_fold_arch_NN(n_layers, activ_func_layers, k_fold)
     print(history_acc)
     print('model ACC: ', round(sum(history_acc)/len(history_acc)*100, 1), '%')
-'''
+
 experiment([450, 220, 110, 50, 20, 10],
            ['relu', 'relu', 'relu', 'relu', 'relu', 'softmax'])
-'''
+
 '''
 experiment([220, 50, 10],
            [relu', 'relu', softmax'])
@@ -73,7 +73,7 @@ experiment([220, 50, 10],
 experiment([180, 30, 10],
            ['relu', 'relu', 'softmax'])
 '''
-
+'''
 experiment([100, 10],
            ['relu', 'softmax'])
-
+'''

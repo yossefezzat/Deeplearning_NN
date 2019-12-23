@@ -5,7 +5,6 @@ import csv
 import pandas as pd
 import numpy as np
 
-
 WIDTH = 30
 HEIGHT = 30
 
@@ -26,7 +25,6 @@ def sum_images(images):
 
 def create_csv_file(data):
     columns = []
-    print("data" , len(data[0]))
     with open('images_CNN.txt' , 'w', newline = "") as f:
         write = csv.writer(f)
         write.writerow(columns)
@@ -96,36 +94,6 @@ def read_images_from_dirs(dir_path):
      return images
  
 #################################################################
-"""    
-def normalize_images(images):
-    avg_image = [[[0, 0, 0]] * images[0].shape[1] for i in range(images[0].shape[0])] 
-
-    print(type(avg_image))
-    for image in images:
-        for i in range(image[0].shape[0]):
-            for j in range(image[0].shape[1]):           
-                avg_image[i][j][0] += float(image[0][i][j][0])
-                avg_image[i][j][1] += float(image[0][i][j][1])
-                avg_image[i][j][2] += float(image[0][i][j][2])
-        
-        for i in range(image[0].shape[0]):
-            for j in range(image[0].shape[1]):
-                avg_image[i][j][0] = float(avg_image[i][j][0]/len(images)*1.0)
-                avg_image[i][j][1] = float(avg_image[i][j][1]/len(images)*1.0)
-                avg_image[i][j][2] = float(avg_image[i][j][2]/len(images)*1.0)
-    
-    normalized_images = images # copy of the original data
-    
-    for k in range(len(images)):
-        for i in range(images[k][0].shape[0]):
-            for j in range(images[k][0].shape[1]):
-                normalized_images[k][0][i][j][0] = float(normalized_images[k][0][i][j][0]) - float(avg_image[i][j][0])
-                #normalized_images[k][0][i][j][0] /= 255.0
-                normalized_images[k][0][i][j][1] = float(normalized_images[k][0][i][j][1]) -float(avg_image[i][j][1])
-                #normalized_images[k][0][i][j][1] /= 255.0
-                normalized_images[k][0][i][j][2] = float(normalized_images[k][0][i][j][2]) - float(avg_image[i][j][2])
-                #normalized_images[k][0][i][j][2] /= 255.0
-    return normalized_images
 """
 def normalize_image(image):
     normalized_image = np.zeros([WIDTH,HEIGHT, 3])
@@ -137,21 +105,28 @@ def normalize_image(image):
             normalized_image[i][j][2] = round(1.0*image[i][j][2]/255, 2)
     return normalized_image
 
-
+"""
 
 #################################################################
  
 def collect_images(parent_dir_path):
+    average_images = np.zeros(WIDTH*HEIGHT*3)
     collected_images = []
     images = read_images_from_dirs(parent_dir_path)
     for i in range(len(images)):
         images[i] = (resize_image(images[i][0]), images[i][1])
 
     for i in range(len(images)):
-        normalized_image = normalize_image(images[i][0])
+        #normalized_image = normalize_image(images[i][0])
         output_label = one_hot_encoder(int(images[i][1]))
-        flat_image = flatten(normalized_image, output_label)
+        flat_image = flatten(images[i][0], output_label)
+        average_images = np.add(flat_image[:WIDTH*HEIGHT*3] , average_images)
         collected_images.append(flat_image)
+    average_images = average_images/len(images)
+    for i in range(len(collected_images)):
+        collected_images[i][:WIDTH*HEIGHT*3] = np.around(np.absolute((np.subtract(
+                                                collected_images[i][:WIDTH*HEIGHT*3] , average_images)
+                                                /255.0)) ,decimals=3)
     return collected_images
 
 #################################################################
@@ -172,58 +147,20 @@ def final_data():
     final_data = list()
     for i in range(len(dataa)):
         curr_list= []
-        curr_list.append(dataa[i][0:2700].reshape(30,30,3))
-        curr_list.append(dataa[i][2700:])
+        curr_list.append(dataa[i][0:WIDTH*HEIGHT*3].reshape(WIDTH,HEIGHT,3))
+        curr_list.append(dataa[i][WIDTH*HEIGHT*3:])
         final_data.append(curr_list)
         
     train_data, validation_data, test_data = split_data(final_data)
     return train_data , validation_data ,test_data
 
 ################################################################
-"""
+
+'''
 data = collect_images("Sign-Language-Digits-Dataset-master/Dataset")
-train_data, validation_data, test_data = split_data(data)
-print(train_data[0][900:])
-"""
-'''
-train_data, validation_data, test_data = final_data()
-with open('train.csv' , 'w', newline = "") as f:
-        write = csv.writer(f)
-        for i in range(len(train_data)):
-            write.writerow(train_data[i])
-'''
-"""
-data = collect_images("Sign-Language-Digits-Dataset-master/Dataset")    
 create_csv_file(data)
-"""
-
-"""
-images = read_images_from_dirs("Sign-Language-Digits-Dataset-master/Dataset")
-norm = normalize_image(images[0][0])
-flat = np.array(norm)
-flatten = flat.flatten()
-for i in range(len(flatten)):    
-    print(flatten[i])
-#for i in range(len(norm[0])):
-#    print(norm[i])
+'''
 
 
 
-
-collected_images = collect_images("Sign-Language-Digits-Dataset-master/Dataset")
-"""
-
-
-"""
-images = read_images_from_dirs("Sign-Language-Digits-Dataset-master/Dataset")
-norm = normalize_image(images[0][0])
-flat = flatten(norm)
-
-print(flat)
-
-
-create_csv_file(collected_images)
-"""
-
-  
 

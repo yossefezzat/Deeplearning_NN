@@ -136,3 +136,4 @@ with open('train.csv' , 'w', newline = "") as f:
 data = collect_images("Sign-Language-Digits-Dataset-master/Dataset")    
 create_csv_file(data)
 """
+
