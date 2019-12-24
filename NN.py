@@ -50,7 +50,7 @@ def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=5):
     model = build_model(n_layers, activ_func_layers)
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
-        history = model.fit(X_train , Y_train ,epochs = 20 , batch_size=64)
+        history = model.fit(X_train , Y_train ,epochs = 20 , validation_data=(X_validation , Y_validation) , batch_size=64)
         test_loss, test_acc = model.evaluate(X_test , Y_test)        
         Y_pred = model.predict(X_test)
         Y_pred = [int(np.argmax(i)) for i in Y_pred]

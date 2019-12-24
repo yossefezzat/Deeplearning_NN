@@ -3,7 +3,7 @@ import os
 import random
 import csv
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 WIDTH = 30
 HEIGHT = 30
@@ -136,4 +136,3 @@ with open('train.csv' , 'w', newline = "") as f:
 data = collect_images("Sign-Language-Digits-Dataset-master/Dataset")    
 create_csv_file(data)
 """
-

@@ -4,6 +4,7 @@ import random
 import csv
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 WIDTH = 30
 HEIGHT = 30
@@ -160,7 +161,6 @@ def final_data():
 data = collect_images("Sign-Language-Digits-Dataset-master/Dataset")
 create_csv_file(data)
 '''
-
 
 
 
