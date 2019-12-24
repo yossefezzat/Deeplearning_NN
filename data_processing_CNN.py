@@ -9,21 +9,6 @@ import matplotlib.pyplot as plt
 WIDTH = 30
 HEIGHT = 30
 
-"""
-def sum_images(images):
-    avg_images = images[0][0]
-    image = 1
-    counter = 0 
-    for image in range(len(images)):
-        for i in range(images[image][0].shape[0]):
-            for j in range(images[image][0].shape[1]):
-                    #print(len(avg_images[i][j]) , len(images[image][i][j][k])) 
-                    #print(image)
-                    avg_images[i][j][0] += images[image][0][i][j][0]/255
-    print(counter)
-    return avg_images
-"""
-
 def create_csv_file(data):
     columns = []
     with open('images_CNN.txt' , 'w', newline = "") as f:
@@ -95,20 +80,7 @@ def read_images_from_dirs(dir_path):
      return images
  
 #################################################################
-"""
-def normalize_image(image):
-    normalized_image = np.zeros([WIDTH,HEIGHT, 3])
-    #[[0,0,0] * image.shape[1] for i in range(image.shape[0])]
-    for i in range(image.shape[0]):
-        for j in range(image.shape[1]):
-            normalized_image[i][j][0] = round(1.0*image[i][j][0]/255, 2)
-            normalized_image[i][j][1] = round(1.0*image[i][j][1]/255, 2)
-            normalized_image[i][j][2] = round(1.0*image[i][j][2]/255, 2)
-    return normalized_image
 
-"""
-
-#################################################################
  
 def collect_images(parent_dir_path):
     average_images = np.zeros(WIDTH*HEIGHT*3)
@@ -125,9 +97,9 @@ def collect_images(parent_dir_path):
         collected_images.append(flat_image)
     average_images = average_images/len(images)
     for i in range(len(collected_images)):
-        collected_images[i][:WIDTH*HEIGHT*3] = np.around(np.absolute((np.subtract(
+        collected_images[i][:WIDTH*HEIGHT*3] = np.around((np.subtract(
                                                 collected_images[i][:WIDTH*HEIGHT*3] , average_images)
-                                                /255.0)) ,decimals=3)
+                                                /255.0) ,decimals=3)
     return collected_images
 
 #################################################################

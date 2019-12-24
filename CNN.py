@@ -2,6 +2,7 @@ from data_processing_CNN import final_data , WIDTH , HEIGHT
 from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report
 
 image_size = WIDTH*HEIGHT*3
 
@@ -55,16 +56,25 @@ def build_model(n_layers=[] , num_cov= 1 , activ_func_layers=[] , pooling=[]):
     
 def k_fold_arch_CNN(n_layers ,num_cov , activ_func_layers,pooling , k_fold):
     history_acc = []
-    model = build_model(n_layers ,num_cov , activ_func_layers , pooling)
-    models.append(model)
+    
+    
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
+        model = build_model(n_layers ,num_cov , activ_func_layers , pooling)
         history = model.fit(np.array(X_train), np.array(Y_train) ,epochs=10  , validation_data = (np.array(X_validation) , np.array(Y_validation)) ,   batch_size=64)               
         test_loss, test_acc = model.evaluate(np.array(X_test) , np.array(Y_test))        
         Y_pred = model.predict(np.array(X_test))
+        y_labels_predicted = []
+        y_labels_actual = []
+        for i in range(len(Y_pred)):
+            y_labels_predicted.append(np.argmax(Y_pred[i]))
+            y_labels_actual.append(np.argmax(Y_test[i]))
+        print(classification_report(y_labels_actual , y_labels_predicted))
+        keras.utils.plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
         print(np.argmax(Y_pred[0]) , " hello  ", np.argmax(Y_test[0]))
         Y_pred = [int(np.argmax(i)) for i in Y_pred]
         history_acc.append(history.history['accuracy'][-1]) #last epoch acc
+        models.append(model)
     return history_acc
 
 accuraices = []
@@ -74,9 +84,18 @@ def experiment(n_layers, num_conv , activ_func_layers,pooling, k_fold=3):
     print(history_acc)
     print('model ACC: ', round(sum(history_acc)/len(history_acc)*100, 1), '%')
     
-def report(modelsssss):
-    for model in modelsssss:
-        print(model.summary())
+def report():
+    print(len(models))
+    print(len(accuraices))
+    for i in range(len(models)):
+        with open('report_CNN.txt','a') as out:
+        # Pass the file handle in as a lambda function to make it callable
+            models[i].summary(print_fn=lambda x: out.write(x + '\n'))
+            out.write("Train Accuracy : ")
+            out.write( str(accuraices[i])+ "%")
+            print(models[i].summary())
+    
+    
 def report_plot_experiments():
     print(accuraices)
     objects = ('Arch1' , 'Arch2' , 'Arch3' ,'Arch4')
@@ -105,7 +124,9 @@ experiment([100, 10] , 4 ,
 
 
 
+    
 
-
-report(models)
+report()
+'''
 report_plot_experiments()
+'''
