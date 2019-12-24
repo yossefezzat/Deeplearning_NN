@@ -1,9 +1,10 @@
 from data_processing import final_data , WIDTH , HEIGHT
 from tensorflow import keras
 import numpy as np
+import matplotlib.pyplot as plt
 
 image_size = WIDTH*HEIGHT
-
+models = []
 
 def extract_train_valid_test():
     train_data , validation_data ,test_data = final_data()
@@ -45,9 +46,10 @@ def build_model(n_layers, activ_func_layers):
     return model
 
 
-def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=5):
+def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=3):
     history_acc = []
     model = build_model(n_layers, activ_func_layers)
+    models.append(model)
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
         history = model.fit(X_train , Y_train ,epochs = 20 , validation_data=(X_validation , Y_validation) , batch_size=64)
@@ -57,23 +59,43 @@ def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=5):
         history_acc.append(history.history['accuracy'][-1]) #last epoch acc
     return history_acc
 
+accuraices = []
 def experiment(n_layers, activ_func_layers, k_fold=5):
     history_acc = k_fold_arch_NN(n_layers, activ_func_layers, k_fold)
+    accuraices.append(round(sum(history_acc)/len(history_acc)*100, 1))
     print(history_acc)
     print('model ACC: ', round(sum(history_acc)/len(history_acc)*100, 1), '%')
+
+def report(modelsssss):
+    for model in modelsssss:
+        print(model.summary())
+        
+def report_plot_experiments():
+    print(accuraices)
+    objects = ('Arch1' , 'Arch2' , 'Arch3' ,'Arch4')
+    y_pos = np.arange(len(objects))
+    performance = accuraices
+    plt.bar(y_pos, performance, align='center', alpha=0.5)
+    plt.xticks(y_pos, objects)
+    plt.ylabel('Accuracies')
+    plt.title('Archs')
+
 
 experiment([450, 220, 110, 50, 20, 10],
            ['relu', 'relu', 'relu', 'relu', 'relu', 'softmax'])
 
-'''
+
 experiment([220, 50, 10],
-           [relu', 'relu', softmax'])
-'''
-'''
+           ['relu', 'relu', 'softmax'])
+
+
 experiment([180, 30, 10],
            ['relu', 'relu', 'softmax'])
-'''
-'''
+
+
 experiment([100, 10],
            ['relu', 'softmax'])
-'''
+
+
+report(models)
+report_plot_experiments()
