@@ -74,7 +74,7 @@ def k_fold_arch_CNN(n_layers ,num_cov , activ_func_layers,pooling , k_fold):
         print(np.argmax(Y_pred[0]) , " hello  ", np.argmax(Y_test[0]))
         Y_pred = [int(np.argmax(i)) for i in Y_pred]
         history_acc.append(history.history['accuracy'][-1]) #last epoch acc
-        models.append(model)
+    models.append(model)
     return history_acc
 
 accuraices = []

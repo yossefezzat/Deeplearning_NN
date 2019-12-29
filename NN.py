@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report
 
 image_size = WIDTH*HEIGHT
 models = []
-model_loss = []
+model_losses = []
 accuraices = []
 
 def extract_train_valid_test():
@@ -50,7 +50,7 @@ def build_model(n_layers, activ_func_layers):
 
 def k_fold_arch_NN(n_layers, activ_func_layers, k_fold=3):
     history_acc = []
-
+    history_loss = []
     for i in range(k_fold):
         X_train, Y_train , X_validation , Y_validation , X_test , Y_test = extract_train_valid_test()
         model = build_model(n_layers, activ_func_layers)
@@ -106,14 +106,14 @@ print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Arch 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 experiment([220, 50, 10],
            ['relu', 'relu', 'softmax'])
 
-"""
+print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Arch 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 experiment([180, 30, 10],
            ['relu', 'relu', 'softmax'])
 
-
+print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Arch 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 experiment([100, 10],
            ['relu', 'softmax'])
-"""
+
 
 report()
 #report_plot_experiments()
